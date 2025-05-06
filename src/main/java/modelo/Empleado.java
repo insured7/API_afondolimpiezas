@@ -8,7 +8,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "empleados")
 public class Empleado {
@@ -24,8 +32,8 @@ public class Empleado {
 	@Column(name = "apellidos")
 	private String apellidos;
 
-	@Column(name = "fechaNac")
-	private Date fechaNac;
+	@Column(name = "fecha_nac")
+	private Date fecha_nac;
 
 	@Column(name = "dni")
 	private String dni;
@@ -35,4 +43,8 @@ public class Empleado {
 
 	@Column(name = "telefono")
 	private String telefono;
+
+	@Column(name = "contrasenia")
+	private String contrasenia;
+
 }

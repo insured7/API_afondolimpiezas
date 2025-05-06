@@ -12,7 +12,6 @@ import lombok.*;
  * Entidad usuario
  */
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,10 +21,10 @@ import lombok.*;
 public class Usuario {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_usuario")
 	private Long id_usuario;
-	
+
 	@Column(name = "nombre")
 	private String nombre;
 	@Column(name = "apellidos")
@@ -36,5 +35,7 @@ public class Usuario {
 	private String direccion;
 	@Column(name = "telefono")
 	private String telefono;
-	
+	@Column(name = "contrasenia")
+	private String contrasenia;
+
 }
