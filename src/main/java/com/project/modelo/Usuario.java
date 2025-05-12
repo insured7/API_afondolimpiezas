@@ -35,8 +35,8 @@ public class Usuario {
 	private String nombre;
 	@Column(name = "apellidos")
 	private String apellidos;
-	@Column(name = "email")
-	private String email;
+	@Column(name = "correo")
+	private String correo;
 	@Column(name = "direccion")
 	private String direccion;
 	@Column(name = "telefono")

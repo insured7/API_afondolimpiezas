@@ -1,6 +1,7 @@
 package com.project.modelo;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,17 +33,23 @@ public class Empleado {
 	@Column(name = "apellidos")
 	private String apellidos;
 
-	@Column(name = "fecha_nac")
-	private Date fecha_nac;
-
-	@Column(name = "dni")
-	private String dni;
-
 	@Column(name = "correo")
 	private String correo;
 
+	@Column(name = "direccion")
+	private String direccion;
+
 	@Column(name = "telefono")
 	private String telefono;
+
+	@Column(name = "admin")
+	private boolean admin;
+
+	@Column(name = "fecha_nac")
+	private LocalDate fecha_nac;
+
+	@Column(name = "dni")
+	private String dni;
 
 	@Column(name = "contrasenia")
 	private String contrasenia;

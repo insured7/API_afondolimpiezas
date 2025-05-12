@@ -43,10 +43,8 @@ public class UsuarioControlador {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> getById(@PathVariable Long id) {
-        return usuarioservicio.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Usuario getById(@PathVariable Long id) {
+        return usuarioservicio.findById(id);
     }
     
     @DeleteMapping("/{id}")
@@ -59,7 +57,7 @@ public class UsuarioControlador {
         @PathVariable Long id,
         @RequestBody Map<String, Object> updates) {
         
-        Usuario usuario = usuarioservicio.updateParcialUsuario(id, updates);
+        Usuario usuario = usuarioservicio.modificaParcialUsuario(id, updates);
         return ResponseEntity.ok(usuario);
     }
 }

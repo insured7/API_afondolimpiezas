@@ -24,22 +24,29 @@ public class UsuarioServicio {
 	@Autowired
 	private UsuarioRepositorio usuariorepositorio;
 
-	// Create
+	// Guarda usuario
 	public Usuario guardarUsuario(Usuario usuario) {
-		return usuariorepositorio.save(usuario);
-	}
+        if(usuario == null) {
+            throw new IllegalArgumentException("El usuario no puede ser nulo");
+        }
+        return usuariorepositorio.save(usuario);
+    }
 
-	// Read
+	// Lista todos los usuarios
 	public List<Usuario> listarTodosUsuarios() {
-		return usuariorepositorio.findAll();
-	}
+        List<Usuario> usuarios = usuariorepositorio.findAll();
+        if(usuarios.isEmpty()) {
+            throw new RuntimeException("No se encontraron usuarios");
+        }
+        return usuarios;
+    }
 
-	// Read by Id
-	public Optional<Usuario> findById(Long id) {
-		return usuariorepositorio.findById(id);
-	}
+	// Encuentra al usuario por el Id
+	public Usuario findById(Long id) {
+        return usuariorepositorio.findById(id).orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado con ID: " + id));
+    }
 
-	// Delete by Id
+	// Elimina al usuario por el id
 	public ResponseEntity<String> deletebyId(Long id) {
 
 		if (usuariorepositorio.existsById(id)) {
@@ -52,35 +59,57 @@ public class UsuarioServicio {
 		}
 	}
 
-	// Update parcial
+	// Modifica parcialmente al usuario
 	@Transactional
-	public Usuario updateParcialUsuario(Long id, Map<String, Object> updates) {
+    public Usuario modificaParcialUsuario(Long id, Map<String, Object> updates) {
+        if(updates == null || updates.isEmpty()) {
+            throw new IllegalArgumentException("Los campos a actualizar no pueden estar vacíos");
+        }
 
-		Usuario usuarioExistente = usuariorepositorio.findById(id)
-				.orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+        Usuario usuarioExistente = usuariorepositorio.findById(id)
+            .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado con ID: " + id));
 
-		updates.forEach((campo, valor) -> {
-			switch (campo) {
-			case "nombre":
-				usuarioExistente.setNombre((String) valor);
-				break;
+        updates.forEach((campo, valor) -> {
+            try {
+                switch (campo) {
+                    case "nombre":
+                        if(valor != null) usuarioExistente.setNombre(valor.toString());
+                        break;
+                    case "apellidos":
+                        if(valor != null) usuarioExistente.setApellidos(valor.toString());
+                        break;
+                    case "correo":
+                        if(valor != null) {
+                            String correo = valor.toString();
+                            if(!correo.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+                                throw new IllegalArgumentException("Formato de correo inválido");
+                            }
+                            usuarioExistente.setCorreo(correo);
+                        }
+                        break;
+                    case "direccion":
+                        if(valor != null) usuarioExistente.setDireccion(valor.toString());
+                        break;
+                    case "telefono":
+                        if(valor != null) usuarioExistente.setTelefono(valor.toString());
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Campo no permitido para actualización: " + campo);
+                }
+            } catch (ClassCastException e) {
+                throw new IllegalArgumentException("Tipo de dato incorrecto para el campo " + campo);
+            }
+        });
 
-			case "apellidos":
-				usuarioExistente.setApellidos((String) valor);
-
-			case "email":
-				usuarioExistente.setEmail((String) valor);
-				break;
-			case "direccion":
-				usuarioExistente.setDireccion((String) valor);
-				break;
-			case "telefono":
-				usuarioExistente.setTelefono((String) valor);
-				break;
-			}
-		});
-
-		return usuariorepositorio.save(usuarioExistente);
+        return usuariorepositorio.save(usuarioExistente);
+    }
+	
+	//Excepcion personalizada
+	class UsuarioNoEncontradoException extends RuntimeException {
+	    public UsuarioNoEncontradoException(String mensaje) {
+	        super(mensaje);
+	        System.out.println(mensaje);
+	    }
 	}
 
 }
