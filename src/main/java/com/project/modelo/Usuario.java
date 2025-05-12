@@ -1,10 +1,16 @@
-package modelo;
+package com.project.modelo;
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -37,5 +43,11 @@ public class Usuario {
 	private String telefono;
 	@Column(name = "contrasenia")
 	private String contrasenia;
+
+	
+	@OneToMany(mappedBy = "usuario")
+	@JsonManagedReference
+	@JsonIgnore
+	private List<Solicitud_presupuesto> solicitudes;
 
 }

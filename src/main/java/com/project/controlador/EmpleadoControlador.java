@@ -1,4 +1,4 @@
-package controlador;
+package com.project.controlador;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import modelo.Empleado;
-import servicio.EmpleadoServicio;
+import com.project.modelo.Empleado;
+import com.project.servicio.EmpleadoServicio;
 
 @RestController
-@RequestMapping("/api/empleados")
+@RequestMapping("empleados")
 public class EmpleadoControlador {
 
 	@Autowired

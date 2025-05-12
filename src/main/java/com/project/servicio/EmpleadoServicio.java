@@ -1,13 +1,13 @@
-package servicio;
+package com.project.servicio;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import modelo.Empleado;
-import modelo.Usuario;
-import repositorio.EmpleadoRepositorio;
+import com.project.modelo.Empleado;
+import com.project.modelo.Usuario;
+import com.project.repositorio.EmpleadoRepositorio;
 
 @Service
 public class EmpleadoServicio {

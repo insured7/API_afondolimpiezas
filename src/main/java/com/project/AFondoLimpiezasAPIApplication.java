@@ -9,18 +9,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
+/*
+ * @ComponentScan(basePackages = { "controlador", "servicio", "modelo" })
+ * 
+ * @EntityScan(basePackages = { "modelo" // Paquete donde están los entidades
+ * JPA })
+ * 
+ * @EnableJpaRepositories(basePackages = { "repositorio" // Paquete donde están
+ * los repositorios })
+ */
 @SpringBootApplication
-@ComponentScan(basePackages = {
-    "controlador",
-    "servicio",
-    "modelo"
-})
-@EntityScan(basePackages = {
-    "modelo"  // Paquete donde están los entidades JPA
-})
-@EnableJpaRepositories(basePackages = {
-    "repositorio"  // Paquete donde están los repositorios
-})
 public class AFondoLimpiezasAPIApplication {
 
     public static void main(String[] args) {
