@@ -10,15 +10,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-/*
- * @ComponentScan(basePackages = { "controlador", "servicio", "modelo" })
- * 
- * @EntityScan(basePackages = { "modelo" // Paquete donde están los entidades
- * JPA })
- * 
- * @EnableJpaRepositories(basePackages = { "repositorio" // Paquete donde están
- * los repositorios })
- */
+
 @SpringBootApplication
 public class AFondoLimpiezasAPIApplication {
 
