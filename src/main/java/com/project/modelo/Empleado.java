@@ -1,6 +1,5 @@
 package com.project.modelo;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
