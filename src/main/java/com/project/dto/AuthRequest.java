@@ -1,5 +1,9 @@
 package com.project.dto;
 
+/**
+ * DTO que contiene correo y contraseña extraidas del claim.
+ */
+
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;

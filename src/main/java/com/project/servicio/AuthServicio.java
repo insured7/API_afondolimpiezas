@@ -12,6 +12,11 @@ import com.project.repositorio.EmpleadoRepositorio;
 import com.project.repositorio.UsuarioRepositorio;
 import com.project.util.JwtUtil;
 
+
+/**
+ * Clase Servicio de Login
+ * Compara correo y contraseña y genera un token con el correo y el ROL.
+ */
 @Service
 public class AuthServicio {
 

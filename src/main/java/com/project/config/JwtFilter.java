@@ -19,35 +19,37 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+/**
+ * Filtro para la autorizacion de rutas, valida y extrae informacion extraida de
+ * los token.
+ */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
-        
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 
-            try {
-                Claims claims = JwtUtil.extractClaims(token);
-                String correo = claims.getSubject();
-                String rol = claims.get("rol", String.class);
+		String header = request.getHeader("Authorization");
+		if (header != null && header.startsWith("Bearer ")) {
+			String token = header.substring(7);
 
-                List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(rol));
+			try {
+				Claims claims = JwtUtil.extractClaims(token);
+				String correo = claims.getSubject();
+				String rol = claims.get("rol", String.class);
 
-                Authentication auth =
-                    new UsernamePasswordAuthenticationToken(correo, null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-        }
+				List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(rol));
 
-        try {
+				Authentication auth = new UsernamePasswordAuthenticationToken(correo, null, authorities);
+				SecurityContextHolder.getContext().setAuthentication(auth);
+			} catch (Exception e) {
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				return;
+			}
+		}
+
+		try {
 			filterChain.doFilter(request, response);
 		} catch (java.io.IOException e) {
 			// TODO Auto-generated catch block
@@ -56,6 +58,5 @@ public class JwtFilter extends OncePerRequestFilter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 }
-

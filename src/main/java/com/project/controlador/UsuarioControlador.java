@@ -19,7 +19,7 @@ import com.project.modelo.Usuario;
 import com.project.servicio.UsuarioServicio;
 
 /**
- * Endpoint de usuarios
+ * Controlador Usuarios
  */
 
 @RestController

@@ -11,6 +11,9 @@ import com.project.dto.AuthRequest;
 import com.project.dto.AuthResponse;
 import com.project.servicio.AuthServicio;
 
+/**
+ * Controlador del Login de la pagina, autorizado por tokens
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthControlador {

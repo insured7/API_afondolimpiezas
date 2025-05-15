@@ -14,7 +14,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+/**
+ * Entidad de la solicitud del presupuesto enviada por un usuario en los formularios
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -3,7 +3,9 @@ package com.project.controlador;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * Clase TEST controladora de rutas
+ */
 @RestController
 @RequestMapping("/test")
 public class TestControlador {
