@@ -11,11 +11,14 @@ import com.project.repositorio.Solicitud_presupuestoRepositorio;
 @Service
 public class Solicitud_presupuestoServicio {
 
-	
 	@Autowired
 	Solicitud_presupuestoRepositorio solicitudPresu;
-	
+
 	public List<Solicitud_presupuesto> listarTodasSolicitudes() {
-        return solicitudPresu.findAll();
-    }
+		return solicitudPresu.findAll();
+	}
+
+	public Solicitud_presupuesto crearSolicitud(Solicitud_presupuesto solicitud) {
+		return solicitudPresu.save(solicitud);
+	}
 }

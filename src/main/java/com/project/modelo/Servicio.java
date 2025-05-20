@@ -3,8 +3,6 @@ package com.project.modelo;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,41 +19,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Entidad de la solicitud del presupuesto enviada por un usuario en los
- * formularios
- */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "solicitudes_presupuesto", schema = "core")
-public class Solicitud_presupuesto {
+@Table(name = "servicios", schema = "core")
+public class Servicio {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_solicitudes_presupuesto")
-	private Long id_solicitudes_presupuesto;
-
-	private String detalles;
-
-	private String estado;
+	@Column(name = "id_servicio")
+	private Long id_servicio;
+	private String tipo;
+	private String descripcion;
+	private String precio_base;
 
 	// TODO: Comentarios de los FK
-
 	@ManyToOne
-	@JoinColumn(name = "usuario_id")
+	@JoinColumn(name = "solicitud_id", nullable = false)
 	@JsonBackReference
-	private Usuario usuario;
+	private Solicitud_presupuesto solicitud;
 
-	@JsonProperty("usuarioId") //
-	public Long getUsuarioId() {
-		return (usuario != null) ? usuario.getId_usuario() : null;
-	}
-
-	@OneToMany(mappedBy = "solicitud", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private List<Servicio> servicios;
-
+	@OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Asignacion_servicio> asignaciones;
 }
