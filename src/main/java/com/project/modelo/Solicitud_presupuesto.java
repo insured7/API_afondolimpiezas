@@ -25,37 +25,41 @@ import lombok.Setter;
  * Entidad de la solicitud del presupuesto enviada por un usuario en los
  * formularios
  */
+
+@Entity
+@Table(name = "solicitudes_presupuesto", schema = "core")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "solicitudes_presupuesto", schema = "core")
 public class Solicitud_presupuesto {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_solicitudes_presupuesto")
-	private Long id_solicitudes_presupuesto;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_solicitudes_presupuesto")
+    private Long id_solicitudes_presupuesto;
 
-	private String detalles;
+    private String detalles;
 
-	private String estado;
+    private String estado;
 
-	// TODO: Comentarios de los FK
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    @JsonBackReference
+    private Usuario usuario;
 
-	@ManyToOne
-	@JoinColumn(name = "usuario_id")
-	@JsonBackReference
-	private Usuario usuario;
+    @JsonProperty("usuarioId")
+    public Long getUsuarioId() {
+        return (usuario != null) ? usuario.getId_usuario() : null;
+    }
 
-	@JsonProperty("usuarioId") //
-	public Long getUsuarioId() {
-		return (usuario != null) ? usuario.getId_usuario() : null;
-	}
+    @ManyToOne
+    @JoinColumn(name = "servicio_id")
+    private Servicio servicio;
 
-	@OneToMany(mappedBy = "solicitud", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonManagedReference
-	private List<Servicio> servicios;
-
+    @JsonProperty("servicioId")
+    public Long getServicioId() {
+        return (servicio != null) ? servicio.getId_servicio() : null;
+    }
 }
+

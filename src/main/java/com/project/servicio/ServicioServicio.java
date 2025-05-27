@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.project.modelo.Servicio;
 import com.project.modelo.Solicitud_presupuesto;
+import com.project.modelo.Usuario;
 import com.project.repositorio.ServicioRepositorio;
 import com.project.repositorio.Solicitud_presupuestoRepositorio;
+import com.project.servicio.UsuarioServicio.UsuarioNoEncontradoException;
 
 @Service
 public class ServicioServicio {
@@ -23,4 +25,9 @@ public class ServicioServicio {
 		servicio.setSolicitud(solicitud);
 		return servicioRepo.save(servicio);
 	}
+	
+	// Encuentra al servicio por el Id
+		public Servicio findById(Long id) {
+	        return servicioRepo.findById(id).orElseThrow();
+	    }
 }
