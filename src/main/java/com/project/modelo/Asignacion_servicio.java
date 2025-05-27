@@ -1,5 +1,9 @@
 package com.project.modelo;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,5 +40,11 @@ public class Asignacion_servicio {
 	@JoinColumn(name = "empleado_id", nullable = false)
 	private Empleado empleado;
 
+	// Campo fecha que se asigna automáticamente cuando se crea el registro
+	@CreationTimestamp
+	@Column(name = "fecha_asignacion", nullable = false, updatable = false)
+	private LocalDateTime fechaAsignacion;
+
+	// Rol que desempeña el empleado
 	private String rol;
 }

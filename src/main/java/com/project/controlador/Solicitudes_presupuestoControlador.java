@@ -25,10 +25,10 @@ public class Solicitudes_presupuestoControlador {
 
 	@Autowired
 	private ServicioRepositorio servicioRepositorio;
-	
+
 	@Autowired
 	private UsuarioRepositorio usuarioRepositorio;
-	
+
 	@Autowired
 	private Solicitud_presupuestoServicio solicitudPresu;
 
@@ -40,20 +40,20 @@ public class Solicitudes_presupuestoControlador {
 
 	@PostMapping
 	public ResponseEntity<Solicitud_presupuesto> crear(@RequestBody Solicitudes_presupuestoDTO solicitudDTO) {
-	    // Buscar el usuario por ID
-	    Usuario usuario = usuarioRepositorio.findById(solicitudDTO.getUsuarioId())
-	        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-	    
-	    // Buscar el servicio por ID
-	    Servicio servicio = servicioRepositorio.findById(solicitudDTO.getServicioId())
-	    		.orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+		// Buscar el usuario por ID
+		Usuario usuario = usuarioRepositorio.findById(solicitudDTO.getUsuarioId())
+				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-	    // Construir la solicitud real
-	    Solicitud_presupuesto solicitud = new Solicitud_presupuesto();
-	    solicitud.setDetalles(solicitudDTO.getDetalles());
-	    solicitud.setEstado(solicitudDTO.getEstado());
-	    solicitud.setUsuario(usuario);
+		// Buscar el servicio por ID
+		Servicio servicio = servicioRepositorio.findById(solicitudDTO.getServicioId())
+				.orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
 
-	    return ResponseEntity.ok(solicitudPresu.crearSolicitud(solicitud));
+		// Construir la solicitud real
+		Solicitud_presupuesto solicitud = new Solicitud_presupuesto();
+		solicitud.setDetalles(solicitudDTO.getDetalles());
+		solicitud.setEstado(solicitudDTO.getEstado());
+		solicitud.setUsuario(usuario);
+		solicitud.setServicio(servicio);
+		return ResponseEntity.ok(solicitudPresu.crearSolicitud(solicitud));
 	}
 }
