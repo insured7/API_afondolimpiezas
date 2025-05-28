@@ -12,19 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.Solicitudes_presupuestoDTO;
-import com.project.modelo.Servicio;
 import com.project.modelo.Solicitud_presupuesto;
 import com.project.modelo.Usuario;
-import com.project.repositorio.ServicioRepositorio;
 import com.project.repositorio.UsuarioRepositorio;
 import com.project.servicio.Solicitud_presupuestoServicio;
 
 @RestController
 @RequestMapping("/solicitudes")
 public class Solicitudes_presupuestoControlador {
-
-	@Autowired
-	private ServicioRepositorio servicioRepositorio;
 
 	@Autowired
 	private UsuarioRepositorio usuarioRepositorio;
@@ -43,17 +38,12 @@ public class Solicitudes_presupuestoControlador {
 		// Buscar el usuario por ID
 		Usuario usuario = usuarioRepositorio.findById(solicitudDTO.getUsuarioId())
 				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-		// Buscar el servicio por ID
-		Servicio servicio = servicioRepositorio.findById(solicitudDTO.getServicioId())
-				.orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
-
+		
 		// Construir la solicitud real
 		Solicitud_presupuesto solicitud = new Solicitud_presupuesto();
 		solicitud.setDetalles(solicitudDTO.getDetalles());
 		solicitud.setEstado(solicitudDTO.getEstado());
 		solicitud.setUsuario(usuario);
-		solicitud.setServicio(servicio);
 		return ResponseEntity.ok(solicitudPresu.crearSolicitud(solicitud));
 	}
 }

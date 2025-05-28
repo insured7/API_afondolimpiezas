@@ -52,14 +52,5 @@ public class Solicitud_presupuesto {
     public Long getUsuarioId() {
         return (usuario != null) ? usuario.getId_usuario() : null;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "servicio_id")
-    private Servicio servicio;
-
-    @JsonProperty("servicioId")
-    public Long getServicioId() {
-        return (servicio != null) ? servicio.getId_servicio() : null;
-    }
 }
 

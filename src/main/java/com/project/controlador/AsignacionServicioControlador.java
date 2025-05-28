@@ -25,9 +25,8 @@ public class AsignacionServicioControlador {
 
 	// Crear una nueva asignación de empleado a servicio con rol
 	@PostMapping("/asignar")
-	public ResponseEntity<Asignacion_servicio> asignarEmpleado(@RequestParam Long servicioId,
-			@RequestParam Long empleadoId, @RequestParam String rol) {
-		Asignacion_servicio nuevaAsignacion = asignacionServicio.asignarEmpleado(servicioId, empleadoId, rol);
+	public ResponseEntity<Asignacion_servicio> asignarEmpleado(	@RequestParam Long empleadoId, @RequestParam String rol) {
+		Asignacion_servicio nuevaAsignacion = asignacionServicio.asignarEmpleado(empleadoId, rol);
 		return ResponseEntity.ok(nuevaAsignacion);
 	}
 
@@ -42,13 +41,6 @@ public class AsignacionServicioControlador {
 	@GetMapping("/empleado/{empleadoId}")
 	public ResponseEntity<List<Asignacion_servicio>> obtenerAsignacionesPorEmpleado(@PathVariable Long empleadoId) {
 		List<Asignacion_servicio> asignaciones = asignacionServicio.obtenerAsignacionesPorEmpleado(empleadoId);
-		return ResponseEntity.ok(asignaciones);
-	}
-
-	// Obtener asignaciones por servicio
-	@GetMapping("/servicio/{servicioId}")
-	public ResponseEntity<List<Asignacion_servicio>> obtenerAsignacionesPorServicio(@PathVariable Long servicioId) {
-		List<Asignacion_servicio> asignaciones = asignacionServicio.obtenerAsignacionesPorServicio(servicioId);
 		return ResponseEntity.ok(asignaciones);
 	}
 

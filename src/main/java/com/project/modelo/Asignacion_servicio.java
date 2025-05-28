@@ -33,10 +33,6 @@ public class Asignacion_servicio {
 	// TODO: Comentarios de los FK
 
 	@ManyToOne
-	@JoinColumn(name = "servicio_id", nullable = false)
-	private Servicio servicio;
-
-	@ManyToOne
 	@JoinColumn(name = "empleado_id", nullable = false)
 	private Empleado empleado;
 

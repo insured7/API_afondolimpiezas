@@ -6,31 +6,33 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.project.dto.RegistroUsuarioDTO;
+import com.project.dto.RegistroEmpleadoDTO;
 import com.project.modelo.Empleado;
 import com.project.modelo.Usuario;
 import com.project.repositorio.EmpleadoRepositorio;
 import com.project.repositorio.UsuarioRepositorio;
 import com.project.util.JwtUtil;
 
-
 /**
- * Clase Servicio de Login
- * Compara correo y contraseña y genera un token con el correo y el ROL.
+ * Servicio de autenticación y registro
+ * Maneja login, registro y validaciones de seguridad
  */
 @Service
 public class AuthServicio {
 
-	@Autowired
-	UsuarioRepositorio usuRep;
+    @Autowired
+    UsuarioRepositorio usuRep;
 
-	@Autowired
-	EmpleadoRepositorio empRep;
-	
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
-	public String loginUsuario(String correo, String contrasenia) {
-		
+    @Autowired
+    EmpleadoRepositorio empRep;
+    
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    
+    // ========== MÉTODOS DE LOGIN ==========
+    
+    public String loginUsuario(String correo, String contrasenia) {
         Usuario u = usuRep.findByCorreo(correo)
             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
@@ -40,8 +42,8 @@ public class AuthServicio {
 
         return JwtUtil.generateToken(correo, "USUARIO");
     }
-	
-	public String loginEmpleado(String correo, String contrasenia) {
+    
+    public String loginEmpleado(String correo, String contrasenia) {
         Empleado e = empRep.findByCorreo(correo)
             .orElseThrow(() -> new UsernameNotFoundException("Empleado no encontrado"));
 
@@ -50,8 +52,101 @@ public class AuthServicio {
         }
 
         String rol = e.isAdmin() ? "ADMIN" : "EMPLEADO";
-
         return JwtUtil.generateToken(correo, rol);
     }
 
+    // ========== MÉTODOS DE REGISTRO ==========
+    
+    public Usuario registrarUsuario(RegistroUsuarioDTO registroDTO) {
+        // Validaciones
+        validarDatosUsuario(registroDTO);
+        
+        // Verificar si el correo ya existe
+        if (usuRep.findByCorreo(registroDTO.getCorreo()).isPresent()) {
+            throw new IllegalArgumentException("El correo ya está registrado");
+        }
+        
+        // Verificar que las contraseñas coincidan
+        if (!registroDTO.getContrasenia().equals(registroDTO.getConfirmarContrasenia())) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+        }
+        
+        // Crear nuevo usuario
+        Usuario nuevoUsuario = new Usuario();
+        nuevoUsuario.setNombre(registroDTO.getNombre());
+        nuevoUsuario.setApellidos(registroDTO.getApellidos());
+        nuevoUsuario.setCorreo(registroDTO.getCorreo());
+        nuevoUsuario.setDireccion(registroDTO.getDireccion());
+        nuevoUsuario.setTelefono(registroDTO.getTelefono());
+        
+        // ⚠️ IMPORTANTE: Encriptar la contraseña
+        nuevoUsuario.setContrasenia(passwordEncoder.encode(registroDTO.getContrasenia()));
+        
+        return usuRep.save(nuevoUsuario);
+    }
+    
+    public Empleado registrarEmpleado(RegistroEmpleadoDTO registroDTO) {
+        // Validaciones
+        validarDatosEmpleado(registroDTO);
+        
+        // Verificar si el correo ya existe
+        if (empRep.findByCorreo(registroDTO.getCorreo()).isPresent()) {
+            throw new IllegalArgumentException("El correo ya está registrado");
+        }
+        
+        // Verificar que las contraseñas coincidan
+        if (!registroDTO.getContrasenia().equals(registroDTO.getConfirmarContrasenia())) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+        }
+        
+        // Crear nuevo empleado
+        Empleado nuevoEmpleado = new Empleado();
+        nuevoEmpleado.setNombre(registroDTO.getNombre());
+        nuevoEmpleado.setApellidos(registroDTO.getApellidos());
+        nuevoEmpleado.setCorreo(registroDTO.getCorreo());
+        nuevoEmpleado.setDireccion(registroDTO.getDireccion());
+        nuevoEmpleado.setTelefono(registroDTO.getTelefono());
+        nuevoEmpleado.setAdmin(registroDTO.isAdmin());
+        nuevoEmpleado.setFecha_nac(registroDTO.getFechaNac());
+        nuevoEmpleado.setDni(registroDTO.getDni());
+        
+        // Encriptar la contraseña
+        nuevoEmpleado.setContrasenia(passwordEncoder.encode(registroDTO.getContrasenia()));
+        
+        return empRep.save(nuevoEmpleado);
+    }
+    
+    // ========== MÉTODOS DE VALIDACIÓN ==========
+    
+    private void validarDatosUsuario(RegistroUsuarioDTO dto) {
+        if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (dto.getApellidos() == null || dto.getApellidos().trim().isEmpty()) {
+            throw new IllegalArgumentException("Los apellidos son obligatorios");
+        }
+        if (dto.getCorreo() == null || !dto.getCorreo().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new IllegalArgumentException("El correo no tiene un formato válido");
+        }
+        if (dto.getContrasenia() == null || dto.getContrasenia().length() < 6) {
+            throw new IllegalArgumentException("La contraseña debe tener al menos 6 caracteres");
+        }
+        if (dto.getTelefono() == null || !dto.getTelefono().matches("\\d{9}")) {
+            throw new IllegalArgumentException("El teléfono debe tener 9 dígitos");
+        }
+    }
+    
+    private void validarDatosEmpleado(RegistroEmpleadoDTO dto) {
+        validarDatosUsuario(new RegistroUsuarioDTO(
+            dto.getNombre(), dto.getApellidos(), dto.getCorreo(),
+            dto.getDireccion(), dto.getTelefono(), dto.getContrasenia(), dto.getConfirmarContrasenia()
+        ));
+        
+        if (dto.getDni() == null || !dto.getDni().matches("\\d{8}[A-Za-z]")) {
+            throw new IllegalArgumentException("El DNI debe tener el formato correcto (8 dígitos + letra)");
+        }
+        if (dto.getFechaNac() == null) {
+            throw new IllegalArgumentException("La fecha de nacimiento es obligatoria");
+        }
+    }
 }
