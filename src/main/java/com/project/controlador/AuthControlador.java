@@ -61,6 +61,7 @@ public class AuthControlador {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Error de validación: " + e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("Error en el registro: " + e.getMessage());
         }

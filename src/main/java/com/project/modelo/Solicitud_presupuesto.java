@@ -42,6 +42,8 @@ public class Solicitud_presupuesto {
     private String detalles;
 
     private String estado;
+    
+    private String direccion;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")

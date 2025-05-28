@@ -15,7 +15,6 @@ public class RegistroEmpleadoDTO {
     private String direccion;
     private String telefono;
     private String contrasenia;
-    private String confirmarContrasenia;
     private boolean admin = false; // Por defecto no es admin
     private LocalDate fechaNac;
     private String dni;

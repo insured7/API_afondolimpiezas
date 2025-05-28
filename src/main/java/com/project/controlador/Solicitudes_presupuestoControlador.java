@@ -43,6 +43,7 @@ public class Solicitudes_presupuestoControlador {
 		Solicitud_presupuesto solicitud = new Solicitud_presupuesto();
 		solicitud.setDetalles(solicitudDTO.getDetalles());
 		solicitud.setEstado(solicitudDTO.getEstado());
+		solicitud.setDireccion(solicitudDTO.getDireccion());;
 		solicitud.setUsuario(usuario);
 		return ResponseEntity.ok(solicitudPresu.crearSolicitud(solicitud));
 	}

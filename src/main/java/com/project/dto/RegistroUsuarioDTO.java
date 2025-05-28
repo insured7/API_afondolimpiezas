@@ -13,5 +13,4 @@ public class RegistroUsuarioDTO {
     private String direccion;
     private String telefono;
     private String contrasenia;
-    private String confirmarContrasenia; // Para validación
 }

@@ -64,12 +64,7 @@ public class AuthServicio {
         // Verificar si el correo ya existe
         if (usuRep.findByCorreo(registroDTO.getCorreo()).isPresent()) {
             throw new IllegalArgumentException("El correo ya está registrado");
-        }
-        
-        // Verificar que las contraseñas coincidan
-        if (!registroDTO.getContrasenia().equals(registroDTO.getConfirmarContrasenia())) {
-            throw new IllegalArgumentException("Las contraseñas no coinciden");
-        }
+        }   
         
         // Crear nuevo usuario
         Usuario nuevoUsuario = new Usuario();
@@ -79,7 +74,7 @@ public class AuthServicio {
         nuevoUsuario.setDireccion(registroDTO.getDireccion());
         nuevoUsuario.setTelefono(registroDTO.getTelefono());
         
-        // ⚠️ IMPORTANTE: Encriptar la contraseña
+        // Encriptar la contraseña
         nuevoUsuario.setContrasenia(passwordEncoder.encode(registroDTO.getContrasenia()));
         
         return usuRep.save(nuevoUsuario);
@@ -92,11 +87,6 @@ public class AuthServicio {
         // Verificar si el correo ya existe
         if (empRep.findByCorreo(registroDTO.getCorreo()).isPresent()) {
             throw new IllegalArgumentException("El correo ya está registrado");
-        }
-        
-        // Verificar que las contraseñas coincidan
-        if (!registroDTO.getContrasenia().equals(registroDTO.getConfirmarContrasenia())) {
-            throw new IllegalArgumentException("Las contraseñas no coinciden");
         }
         
         // Crear nuevo empleado
@@ -139,8 +129,7 @@ public class AuthServicio {
     private void validarDatosEmpleado(RegistroEmpleadoDTO dto) {
         validarDatosUsuario(new RegistroUsuarioDTO(
             dto.getNombre(), dto.getApellidos(), dto.getCorreo(),
-            dto.getDireccion(), dto.getTelefono(), dto.getContrasenia(), dto.getConfirmarContrasenia()
-        ));
+            dto.getDireccion(), dto.getTelefono(), dto.getContrasenia()));
         
         if (dto.getDni() == null || !dto.getDni().matches("\\d{8}[A-Za-z]")) {
             throw new IllegalArgumentException("El DNI debe tener el formato correcto (8 dígitos + letra)");

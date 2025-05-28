@@ -13,7 +13,8 @@ public class Solicitudes_presupuestoDTO {
 
 	private String detalles;
     private String estado;
+    private String direccion;
     private Long usuarioId;
-    private Long servicioId;
+    
 
 }
