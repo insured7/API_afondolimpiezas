@@ -29,6 +29,7 @@ public class AuthServicio {
     
     @Autowired
     PasswordEncoder passwordEncoder;
+   
     
     // ========== MÉTODOS DE LOGIN ==========
     
@@ -138,4 +139,12 @@ public class AuthServicio {
             throw new IllegalArgumentException("La fecha de nacimiento es obligatoria");
         }
     }
+    
+    // ========== OTROS MÉTODOS ==========
+    
+    public Empleado obtenerEmpleadoPorCorreo(String correo) throws Exception {
+        return empRep.findByCorreo(correo)
+                .orElseThrow(() -> new Exception("Empleado no encontrado con correo: " + correo));
+    }
+    
 }

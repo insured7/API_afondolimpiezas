@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.AuthRequest;
 import com.project.dto.AuthResponse;
+import com.project.dto.AuthResponseAdmin;
 import com.project.dto.RegistroUsuarioDTO;
 import com.project.dto.RegistroEmpleadoDTO;
 import com.project.modelo.Usuario;
@@ -42,13 +44,22 @@ public class AuthControlador {
 
 	@PostMapping("/login-empleado")
 	public ResponseEntity<?> loginEmpleado(@RequestBody AuthRequest request) {
-		try {
-			String token = authServicio.loginEmpleado(request.getCorreo(), request.getContrasenia());
-			return ResponseEntity.ok(new AuthResponse(token));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas: " + e.getMessage());
-		}
+	    try {
+	        // Obtengo token
+	        String token = authServicio.loginEmpleado(request.getCorreo(), request.getContrasenia());
+
+	        // Obtengo el empleado para saber si es admin
+	        Empleado empleado = authServicio.obtenerEmpleadoPorCorreo(request.getCorreo());
+
+	        boolean esAdmin = empleado.isAdmin(); // Método o campo booleano que indica si es admin
+
+	        System.out.println("DEBUG: esAdmin=" + esAdmin); // <<--- log
+	        return ResponseEntity.ok(new AuthResponseAdmin(token, esAdmin));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas: " + e.getMessage());
+	    }
 	}
+
 
 	// ========== REGISTRO ENDPOINTS ==========
 
