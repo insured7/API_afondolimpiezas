@@ -28,7 +28,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas (sin autenticación)
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/test/**").permitAll() // Para testing
                         
                         // Rutas protegidas por rol
                         .requestMatchers("/usuarios/**").hasAuthority("USUARIO")
