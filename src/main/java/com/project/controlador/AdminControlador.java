@@ -36,7 +36,7 @@ public class AdminControlador {
 	@PostMapping
 	public ResponseEntity<Solicitud_presupuesto> crearSolicitud(@RequestBody Solicitud_presupuesto solicitud,
 			Principal principal) {
-		String correo = principal.getName(); // Si usas el correo como username en JWT
+		String correo = principal.getName();
 
 		Usuario usuario = usuarioservicio.findByCorreo(correo);
 		if (usuario == null) {
