@@ -14,4 +14,7 @@ import com.project.modelo.Usuario;
 public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 
 	Optional<Usuario> findByCorreo(String email);
+
+	Optional<Usuario> findBytokenactivacion(String tokenactivacion);
+
 }

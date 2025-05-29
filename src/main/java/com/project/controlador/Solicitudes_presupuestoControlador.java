@@ -29,7 +29,7 @@ public class Solicitudes_presupuestoControlador {
 
 	@GetMapping
 	public ResponseEntity<List<Solicitud_presupuesto>> listarSolicitudes() {
-		List<Solicitud_presupuesto> solicitudes = solicitudPresu.listarTodasSolicitudes();
+		List<Solicitud_presupuesto> solicitudes = solicitudPresu.listarTodas();
 		return new ResponseEntity<>(solicitudes, HttpStatus.OK);
 	}
 
@@ -38,13 +38,14 @@ public class Solicitudes_presupuestoControlador {
 		// Buscar el usuario por ID
 		Usuario usuario = usuarioRepositorio.findById(solicitudDTO.getUsuarioId())
 				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-		
+
 		// Construir la solicitud real
 		Solicitud_presupuesto solicitud = new Solicitud_presupuesto();
 		solicitud.setDetalles(solicitudDTO.getDetalles());
 		solicitud.setEstado(solicitudDTO.getEstado());
-		solicitud.setDireccion(solicitudDTO.getDireccion());;
+		solicitud.setDireccion(solicitudDTO.getDireccion());
+		;
 		solicitud.setUsuario(usuario);
-		return ResponseEntity.ok(solicitudPresu.crearSolicitud(solicitud));
+		return ResponseEntity.ok(solicitudPresu.guardar(solicitud));
 	}
 }

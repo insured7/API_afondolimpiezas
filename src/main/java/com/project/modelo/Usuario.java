@@ -1,5 +1,6 @@
 package com.project.modelo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,7 +13,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Entidad usuario
@@ -44,10 +48,25 @@ public class Usuario {
 	@Column(name = "contrasenia")
 	private String contrasenia;
 
-	
+	@Column(name = "tokenactivacion")
+	private String tokenactivacion;
+
+	@Column(name = "expiraciontoken")
+	private LocalDateTime expiraciontoken;
+
+	@Column(name = "activo")
+	private Boolean activo = false;
+
 	@OneToMany(mappedBy = "usuario")
 	@JsonManagedReference
 	@JsonIgnore
 	private List<Solicitud_presupuesto> solicitudes;
 
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
 }

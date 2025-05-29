@@ -5,20 +5,22 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.AuthRequest;
 import com.project.dto.AuthResponse;
 import com.project.dto.AuthResponseAdmin;
-import com.project.dto.RegistroUsuarioDTO;
 import com.project.dto.RegistroEmpleadoDTO;
-import com.project.modelo.Usuario;
+import com.project.dto.RegistroUsuarioDTO;
 import com.project.modelo.Empleado;
+import com.project.modelo.Usuario;
 import com.project.servicio.AuthServicio;
+import com.project.servicio.UsuarioServicio;
 
 /**
  * Controlador de autenticación y registro
@@ -29,6 +31,9 @@ public class AuthControlador {
 
 	@Autowired
 	AuthServicio authServicio;
+
+	@Autowired
+	UsuarioServicio usuarioServicio;
 
 	// ========== LOGIN ENDPOINTS ==========
 
@@ -44,22 +49,21 @@ public class AuthControlador {
 
 	@PostMapping("/login-empleado")
 	public ResponseEntity<?> loginEmpleado(@RequestBody AuthRequest request) {
-	    try {
-	        // Obtengo token
-	        String token = authServicio.loginEmpleado(request.getCorreo(), request.getContrasenia());
+		try {
+			// Obtengo token
+			String token = authServicio.loginEmpleado(request.getCorreo(), request.getContrasenia());
 
-	        // Obtengo el empleado para saber si es admin
-	        Empleado empleado = authServicio.obtenerEmpleadoPorCorreo(request.getCorreo());
+			// Obtengo el empleado para saber si es admin
+			Empleado empleado = authServicio.obtenerEmpleadoPorCorreo(request.getCorreo());
 
-	        boolean esAdmin = empleado.isAdmin(); // Método o campo booleano que indica si es admin
+			boolean esAdmin = empleado.isAdmin(); // Método o campo booleano que indica si es admin
 
-	        System.out.println("DEBUG: esAdmin=" + esAdmin); // <<--- log
-	        return ResponseEntity.ok(new AuthResponseAdmin(token, esAdmin));
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas: " + e.getMessage());
-	    }
+			System.out.println("DEBUG: esAdmin=" + esAdmin); // <<--- log
+			return ResponseEntity.ok(new AuthResponseAdmin(token, esAdmin));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas: " + e.getMessage());
+		}
 	}
-
 
 	// ========== REGISTRO ENDPOINTS ==========
 
@@ -68,17 +72,14 @@ public class AuthControlador {
 		try {
 			Usuario nuevoUsuario = authServicio.registrarUsuario(registroDTO);
 			return ResponseEntity.status(HttpStatus.CREATED)
-					.body(Map.of("mensaje", "Usuario registrado exitosamente con ID: " + nuevoUsuario.getId_usuario()));
-
+					.body(Map.of("mensaje", "Usuario registrado exitosamente con ID: " + nuevoUsuario.getId_usuario(),
+							"info", "Se ha enviado un email para activar la cuenta"));
 		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest()
-				    .body(Map.of("mensaje", "Error de validación: " + e.getMessage()));
-
+			return ResponseEntity.badRequest().body(Map.of("mensaje", "Error de validación: " + e.getMessage()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.CONFLICT)
-				    .body(Map.of("mensaje", "Error en el registro: " + e.getMessage()));
-
+					.body(Map.of("mensaje", "Error en el registro: " + e.getMessage()));
 		}
 	}
 
@@ -94,4 +95,16 @@ public class AuthControlador {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Error en el registro: " + e.getMessage());
 		}
 	}
+
+	@GetMapping("/activar-cuenta")
+	public ResponseEntity<Map<String, String>> activarCuenta(@RequestParam("token") String token) {
+		boolean activado = usuarioServicio.activarUsuarioPorToken(token);
+
+		if (activado) {
+			return ResponseEntity.ok(Map.of("mensaje", "Cuenta activada correctamente"));
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("mensaje", "Token inválido o expirado"));
+		}
+	}
+
 }
